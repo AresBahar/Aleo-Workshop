@@ -12,6 +12,12 @@ program auction_ares_bahar_workshop.aleo {
         is_winner: bool,
     }
 
+     // A prize to be claimed by the winning bid.
+    record Prize {
+        owner: address,
+        amount: u64,
+    }
+
     // Returns a new bid.
     // - `bidder` : The address of the account that placed the bid.
     // - `amount` : The amount of the bid.
@@ -60,6 +66,18 @@ program auction_ares_bahar_workshop.aleo {
             bidder: bid.bidder,
             amount: bid.amount,
             is_winner: true,
+        };
+    }
+
+    // Assigns the prize to the winning bid.
+    transition claim(bid: Bid) -> Prize {
+        // Ensure the bid is the winning bid.
+        assert_eq(bid.is_winner, true);
+
+        // Return a new 'Prize' record assigned to the winning bidder.
+        return Prize {
+            owner: bid.bidder,
+            amount: bid.amount, // Or assign a different amount as per your auction logic.
         };
     }
 }
